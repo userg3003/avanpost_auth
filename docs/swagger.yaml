@@ -1,0 +1,119 @@
+basePath: /
+host: localhost:3011
+info:
+  contact:
+    email: s.urvanov@gmail.com
+    name: API Support
+  description: Swagger API for Golang Project Avanpost_auth.
+  termsOfService: http://swagger.io/terms/
+  title: Avanpost auth Swagger API
+  version: "1.0"
+paths:
+  /appauth:
+    get:
+      consumes:
+      - application/json
+      description: |-
+        По этому пути "прилитает" ответ от сервера Avanpost_FSM с данными авторизации.
+        Результат авторизации возвращается в сессионной cookie.
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Авторизация на сервере Avanpost_FSM.
+      tags:
+      - Internal
+  /auth:
+    get:
+      consumes:
+      - application/json
+      description: |
+        Выполнить авторизацию
+        При обращении по данному пути в браузере активируется окно для ввода
+        регистрационных данных пользователя. При успешной авторизации выполняется перенаправление
+        по пути указанному в разделе Internal.
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Авторизация на сервере Avanpost_FSM
+      tags:
+      - Auth
+  /config:
+    get:
+      consumes:
+      - application/json
+      description: Получить конфигурацию
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Получение информации о конфигурации сервиса
+      tags:
+      - Debug
+  /goodauth:
+    get:
+      consumes:
+      - application/json
+      description: |
+        Страница после успешной авторизации
+        Реальный путь до конечной точеи задаётся в конфигурвции сервиса.
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Страница после успешной авторизации
+      tags:
+      - Debug
+  /health:
+    get:
+      consumes:
+      - application/json
+      description: Получить статус сервиса.
+      produces:
+      - text/html
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+      summary: Показать состояние сервера.
+      tags:
+      - Info
+  /info:
+    get:
+      consumes:
+      - application/json
+      description: |-
+        Получить данные сервера Avanpost_FSM по токену.
+        Токен передаётся в сессионной cookie.
+        Результат возвращается в ... (см. ReadMe).
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Получение авторизацонных данных от сервера Avanpost_FSM
+      tags:
+      - Auth
+swagger: "2.0"
+tags:
+- description: Cool Description
+  externalDocs:
+    description: Best example documentation
+    url: https://example.com
+  name: This is the name of the tag

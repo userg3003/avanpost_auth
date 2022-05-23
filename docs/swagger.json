@@ -1,0 +1,165 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Swagger API for Golang Project Avanpost_auth.",
+        "title": "Avanpost auth Swagger API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support",
+            "email": "s.urvanov@gmail.com"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:3011",
+    "basePath": "/",
+    "paths": {
+        "/appauth": {
+            "get": {
+                "description": "По этому пути \"прилитает\" ответ от сервера Avanpost_FSM с данными авторизации.\nРезультат авторизации возвращается в сессионной cookie.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "text/html"
+                ],
+                "tags": [
+                    "Internal"
+                ],
+                "summary": "Авторизация на сервере Avanpost_FSM.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth": {
+            "get": {
+                "description": "Выполнить авторизацию\nПри обращении по данному пути в браузере активируется окно для ввода\nрегистрационных данных пользователя. При успешной авторизации выполняется перенаправление\nпо пути указанному в разделе Internal.\n",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "text/html"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Авторизация на сервере Avanpost_FSM",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/config": {
+            "get": {
+                "description": "Получить конфигурацию",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Debug"
+                ],
+                "summary": "Получение информации о конфигурации сервиса",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/goodauth": {
+            "get": {
+                "description": "Страница после успешной авторизации\nРеальный путь до конечной точеи задаётся в конфигурвции сервиса.\n",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "text/html"
+                ],
+                "tags": [
+                    "Debug"
+                ],
+                "summary": "Страница после успешной авторизации",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/health": {
+            "get": {
+                "description": "Получить статус сервиса.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "text/html"
+                ],
+                "tags": [
+                    "Info"
+                ],
+                "summary": "Показать состояние сервера.",
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/info": {
+            "get": {
+                "description": "Получить данные сервера Avanpost_FSM по токену.\nТокен передаётся в сессионной cookie.\nРезультат возвращается в ... (см. ReadMe).",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "text/html"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Получение авторизацонных данных от сервера Avanpost_FSM",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "description": "Cool Description",
+            "name": "This is the name of the tag",
+            "externalDocs": {
+                "description": "Best example documentation",
+                "url": "https://example.com"
+            }
+        }
+    ]
+}
