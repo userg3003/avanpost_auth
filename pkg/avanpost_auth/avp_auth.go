@@ -131,7 +131,6 @@ func appauth(c *gin.Context) {
 	if err != nil {
 		log.Error().Msg(err.Error())
 	}
-	defer resp.Body.Close()
 	defer func() {
 		err := resp.Body.Close()
 		if err != nil {
@@ -148,7 +147,9 @@ func appauth(c *gin.Context) {
 
 	session.Set(constants.ServiceSessionParamName, res)
 	err = session.Save()
-	log.Error().Msg(err.Error())
+	if err != nil {
+		log.Error().Msg(err.Error())
+	}
 	if viper.GetString("SERVICE_REDIRECT_URL_AFTER_AUTH") != "" {
 		c.Redirect(http.StatusFound, redirectUrl(viper.GetString("SERVICE_REDIRECT_URL_AFTER_AUTH")))
 	} else {
