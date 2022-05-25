@@ -2,6 +2,7 @@ package avanpost_auth
 
 import (
 	"avanpost_auth/docs"
+	"avanpost_auth/internal/utils"
 	config2 "avanpost_auth/pkg/avanpost_auth/config"
 	constants "avanpost_auth/pkg/avanpost_auth/constants"
 	"encoding/json"
@@ -29,7 +30,7 @@ var RootCmdAuth = &cobra.Command{
 
 func init() {
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
-	log.Logger = log.With().Caller().Logger()
+	log.Logger = log.With().Caller().Logger().Hook(utils.CallerHook{})
 	log.Debug().Msg("")
 	cobra.OnInitialize(config2.InitConfig)
 
@@ -51,6 +52,7 @@ func init() {
 // @Success      200  {string}  Json
 // @Router       /config [get]
 func config(g *gin.Context) {
+	log.Debug().Msg("")
 	g.JSON(http.StatusOK, viper.AllSettings())
 }
 
