@@ -118,7 +118,7 @@
    1. > *go run github.com/playwright-community/playwright-go/cmd/playwright install --with-deps*
       
    Или  
-
+   
    2. >*go install github.com/playwright-community/playwright-go/cmd/playwright*  
    *playwright install --with-deps*
         
