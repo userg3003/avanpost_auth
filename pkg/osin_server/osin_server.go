@@ -14,12 +14,17 @@ import (
 
 var RootCmdOAuth2Server = &cobra.Command{
 	Use:   "start",
-	Short: "Start OAuth2 server for debug",
+	Short: "InitOsinServer OAuth2 server for debug",
 	Long:  `Завпуск OAuth2 сервера для отладки`,
-	Run:   startOsinServer,
+	Run:   startServer,
 }
 
-func startOsinServer(cmd *cobra.Command, args []string) {
+func startServer(_ *cobra.Command, _ []string) {
+	InitOsinServer()
+	http.ListenAndServe(":14000", nil)
+}
+
+func InitOsinServer() {
 	sconfig := osin.NewServerConfig()
 	sconfig.AllowedAuthorizeTypes = osin.AllowedAuthorizeType{osin.CODE, osin.TOKEN}
 	sconfig.AllowedAccessTypes = osin.AllowedAccessType{osin.AUTHORIZATION_CODE,
@@ -426,6 +431,4 @@ func startOsinServer(cmd *cobra.Command, args []string) {
 			w.Write([]byte(fmt.Sprintf("<a href=\"%s\">Refresh Token</a><br/>", rurl)))
 		}
 	})
-
-	http.ListenAndServe(":14000", nil)
 }

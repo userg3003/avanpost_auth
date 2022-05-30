@@ -14,6 +14,10 @@ run-service:
 run-oauth2-server:
 	go run ${FULL_PATH}/osin_server.go start
 
+run-for-tests:
+	go run ${FULL_PATH}/avanpost_auth.go start &
+	go run ${FULL_PATH}/osin_server.go start &
+
 clean:
 	go clean
 	rm ./build/linux/${BINARY_NAME}
@@ -25,3 +29,20 @@ swag-fmt:
 	../bin/swag fmt -d ./pkg/${BINARY_NAME} -g avp_auth.go
 
 swag: swag-build swag-fmt
+
+test-cover:
+	go test ./pkg/avanpost_auth/ -coverprofile cover.out
+	go tool cover -func=c.out
+	go tool cover -html cover.out
+
+test-cover-count:
+	go test ./pkg/avanpost_auth/ -coverprofile cover.out -covermode count
+	go tool cover -html cover.out
+
+tests:
+	go test ./pkg/avanpost_auth
+
+
+
+
+

@@ -25,7 +25,7 @@ var RootCmdAuth = &cobra.Command{
 	Use:   "start",
 	Short: "Start Avanpost auth service",
 	Long:  constants.ServiceName + ` CLI сервис авторизации в Avanpost_FAM`,
-	Run:   startService,
+	RunE:  StartService,
 }
 
 func init() {
@@ -71,28 +71,8 @@ func config(g *gin.Context) {
 // @Router   /auth [get]
 func auth(c *gin.Context) {
 	state := "xyz" //utils.RandStringRunes(10)
-	var v = make(url.Values)
-	v.Set("response_type", "code")
-	v.Set("redirect_uri", redirectUrl(viper.GetString("SERVICE_OAUTH2_REDIRECT")))
-	v.Set("client_id", viper.GetString("OAUTH2_CLIENT_ID"))
-	v.Set("state", state)
-	v.Set("scope", "everything")
-	var u = url.URL{
-		Scheme:   viper.GetString("OAUTH2_URL_AUTH_SHEMA"),
-		Host:     fmt.Sprintf("%s:%d", viper.GetString("OAUTH2_URL_AUTH_HOST"), viper.GetInt("OAUTH2_URL_AUTH_PORT")),
-		Path:     viper.GetString("OAUTH2_URL_AUTH_PATH"),
-		RawQuery: v.Encode(),
-	}
-	c.Redirect(http.StatusFound, u.String())
-}
-
-func redirectUrl(redirectPath string) string {
-	uRedirect := url.URL{
-		Scheme: viper.GetString("SERVICE_SHEMA"),
-		Host:   fmt.Sprintf("%s:%d", viper.GetString("SERVICE_HOST"), viper.GetInt("SERVICE_PORT")),
-		Path:   redirectPath,
-	}
-	return uRedirect.String()
+	u := utils.FullUrlForAuthorize(state)
+	c.Redirect(http.StatusFound, u)
 }
 
 // AuthExample godoc
@@ -125,7 +105,7 @@ func appauth(c *gin.Context) {
 		"code":          {code},
 		"client_secret": {viper.GetString("OAUTH2_CLIENT_SECRET")},
 		"state":         {state},
-		"redirect_uri":  {redirectUrl(viper.GetString("SERVICE_OAUTH2_REDIRECT"))},
+		"redirect_uri":  {utils.RedirectUrl(viper.GetString("SERVICE_OAUTH2_REDIRECT"))},
 	}
 
 	resp, err := http.PostForm(u.String(), data)
@@ -153,7 +133,7 @@ func appauth(c *gin.Context) {
 		log.Error().Msg(err.Error())
 	}
 	if viper.GetString("SERVICE_REDIRECT_URL_AFTER_AUTH") != "" {
-		c.Redirect(http.StatusFound, redirectUrl(viper.GetString("SERVICE_REDIRECT_URL_AFTER_AUTH")))
+		c.Redirect(http.StatusFound, utils.RedirectUrl(viper.GetString("SERVICE_REDIRECT_URL_AFTER_AUTH")))
 	} else {
 		c.String(http.StatusOK, "ok")
 	}
@@ -246,7 +226,7 @@ func health(c *gin.Context) {
 	c.String(http.StatusNoContent, "")
 }
 
-func setupRouter(swagger bool) *gin.Engine {
+func SetupRouter(swagger bool) *gin.Engine {
 	r := gin.Default()
 	store := cookie.NewStore([]byte(viper.GetString("SERVICE_COOKIE_SESSION_SECRET")))
 	r.Use(sessions.Sessions(viper.GetString("SERVICE_COOKIE_SESSION_NAME"), store))
@@ -277,8 +257,9 @@ func setupRouter(swagger bool) *gin.Engine {
 
 // @BasePath  /
 
-func startService(_ *cobra.Command, _ []string) {
-	r := setupRouter(viper.GetBool("SWAGGER"))
+func StartService(_ *cobra.Command, _ []string) error {
+	r := SetupRouter(viper.GetBool("SWAGGER"))
 	err := r.Run(fmt.Sprintf("%s:%d", viper.GetString("SERVICE_HOST"), viper.GetInt("SERVICE_PORT")))
 	log.Error().Msg(err.Error())
+	return err
 }

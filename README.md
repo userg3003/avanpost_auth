@@ -105,4 +105,32 @@
 
 После генерации документации Swagger будет доступен  по адресу: [http://***host:port***/swagger/index.html](http://<host>:<port>/swagger/index.html)
 
- 
+ # Тестирование
+ Тестирование выполняется с использованием  библиотеки [Playwright for Go](https://github.com/playwright-community/playwright-go).
+ (аналог *Selenium*, *Puppeteer* и т.п.)
+## Установка Playwright for Go 
+
+Взято отсюда [Playwright for Go](https://github.com/playwright-community/playwright-go).
+
+1. Установить библиотеку:
+   >*go get github.com/playwright-community/playwright-go*
+2. Установить зависимости:
+   1. > *go run github.com/playwright-community/playwright-go/cmd/playwright install --with-deps*
+      
+   Или  
+   2. >*go install github.com/playwright-community/playwright-go/cmd/playwright*  
+   *playwright install --with-deps*
+        
+     Возможно придётся ещё выполнить:
+    >*npx playwright install*  
+
+## Тестирование
+### Функциональные тесты
+
+Перед выполнением тестов необходимо запустить тестовый OAuth2-сервер и сервис
+> make run-for-tests
+
+По завершении выполнения тестов следует завершить ***osin_server*** и ***avanpost_auth***
+(выполнив **ps** (для опеделения pid процессов) и **kill**).
+
+
