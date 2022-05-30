@@ -16,14 +16,14 @@ import (
 )
 
 func StartOauth2Server() *http.Server {
-	osin_server.InitOsinServer()
+	mux := osin_server.InitOsinServer()
 	srv := &http.Server{
 		Addr:    ":14000",
-		Handler: nil,
+		Handler: mux,
 	}
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && errors.Is(err, http.ErrServerClosed) {
-			log.Printf("listen: %s\n", err)
+			log.Printf("listen OAuth2 server: %s\n", err)
 		}
 	}()
 	return srv
@@ -40,7 +40,7 @@ func StartService(configName string) *http.Server {
 
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && errors.Is(err, http.ErrServerClosed) {
-			log.Printf("listen: %s\n", err)
+			log.Printf("listen Avanpost-service: %s\n", err)
 		}
 
 	}()
@@ -52,14 +52,14 @@ func StartService(configName string) *http.Server {
 func StartServers(configName string) (*http.Server, *http.Server, context.Context) {
 	var srv *http.Server = StartService(configName)
 	osinSrv := StartOauth2Server()
-	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
 	return srv, osinSrv, ctx
 }
 
 func ShutdownServers(ctx context.Context, srv *http.Server, osinSrv *http.Server) {
 	if err := srv.Shutdown(ctx); err != nil {
-		log.Printf(fmt.Sprintf("Server forced to shutdown: %v", err))
+		log.Printf(fmt.Sprintf("Service forced to shutdown: %v", err))
 	}
 	if err := osinSrv.Shutdown(ctx); err != nil {
 		log.Printf(fmt.Sprintf("Server forced to shutdown: %v", err))

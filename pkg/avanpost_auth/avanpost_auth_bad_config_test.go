@@ -12,7 +12,6 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"strings"
 	"testing"
 )
@@ -26,9 +25,9 @@ func TestBadConfigTestSuite(t *testing.T) {
 }
 
 func (suite *BadConfigTestSuite) TestBadOAut2AuthorizePath() {
-	if os.Getenv("APITEST") == "" {
-		suite.T().Skip("skipping test; $APITEST not set")
-	}
+	//if os.Getenv("APITEST") == "" {
+	//	suite.T().Skip("skipping test; $APITEST not set")
+	//}
 	assert_ := assert.New(suite.T())
 	configName := "app_test_bad_config.env"
 	srv, osinSrv, ctx := helpers.StartServers(configName)
@@ -48,9 +47,9 @@ func (suite *BadConfigTestSuite) TestBadOAut2AuthorizePath() {
 }
 
 func (suite *BadConfigTestSuite) TestBadAuthRedirect() {
-	if os.Getenv("APITEST") == "" {
-		suite.T().Skip("skipping test; $APITEST not set")
-	}
+	//if os.Getenv("APITEST") == "" {
+	//	suite.T().Skip("skipping test; $APITEST not set")
+	//}
 	assert_ := assert.New(suite.T())
 	helpers.InitConfigForTests("app_test_bad_config.env")
 	router := avanpost_auth.SetupRouter(false)

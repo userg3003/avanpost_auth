@@ -20,11 +20,18 @@ var RootCmdOAuth2Server = &cobra.Command{
 }
 
 func startServer(_ *cobra.Command, _ []string) {
-	InitOsinServer()
-	http.ListenAndServe(":14000", nil)
+	mux := InitOsinServer()
+	//http.ListenAndServe(":14000", nil)
+	srv := &http.Server{
+		Addr:    ":14000",
+		Handler: mux,
+	}
+	srv.ListenAndServe()
+
 }
 
-func InitOsinServer() {
+func InitOsinServer() *http.ServeMux {
+	mux := http.NewServeMux()
 	sconfig := osin.NewServerConfig()
 	sconfig.AllowedAuthorizeTypes = osin.AllowedAuthorizeType{osin.CODE, osin.TOKEN}
 	sconfig.AllowedAccessTypes = osin.AllowedAccessType{osin.AUTHORIZATION_CODE,
@@ -43,7 +50,7 @@ func InitOsinServer() {
 	//server := osin.NewServer(sconfig, util.NewTestStorage())
 
 	// Authorization code endpoint
-	http.HandleFunc("/authorize", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/authorize", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
@@ -68,7 +75,7 @@ func InitOsinServer() {
 	})
 
 	// Access token endpoint
-	http.HandleFunc("/token", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/token", func(w http.ResponseWriter, r *http.Request) {
 		resp := server.NewResponse()
 		defer resp.Close()
 
@@ -101,7 +108,7 @@ func InitOsinServer() {
 	})
 
 	// Information endpoint
-	http.HandleFunc("/info", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/info", func(w http.ResponseWriter, r *http.Request) {
 		resp := server.NewResponse()
 		defer resp.Close()
 
@@ -112,7 +119,7 @@ func InitOsinServer() {
 	})
 
 	// Application home endpoint
-	http.HandleFunc("/app", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/app", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("<html><body>"))
 
 		w.Write([]byte(fmt.Sprintf("<a href=\"/authorize?response_type=code&client_id=1234&state=xyz&scope=everything&redirect_uri=%s\">Code</a><br/>", url.QueryEscape("http://localhost:14000/appauth/code"))))
@@ -125,7 +132,7 @@ func InitOsinServer() {
 	})
 
 	// Application destination - CODE
-	http.HandleFunc("/appauth/code", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/appauth/code", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 
 		code := r.FormValue("code")
@@ -188,7 +195,7 @@ func InitOsinServer() {
 	})
 
 	// Application destination - TOKEN
-	http.HandleFunc("/appauth/token", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/appauth/token", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 
 		w.Write([]byte("<html><body>"))
@@ -200,7 +207,7 @@ func InitOsinServer() {
 	})
 
 	// Application destination - PASSWORD
-	http.HandleFunc("/appauth/password", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/appauth/password", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 
 		w.Write([]byte("<html><body>"))
@@ -246,7 +253,7 @@ func InitOsinServer() {
 	})
 
 	// Application destination - CLIENT_CREDENTIALS
-	http.HandleFunc("/appauth/client_credentials", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/appauth/client_credentials", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 
 		w.Write([]byte("<html><body>"))
@@ -291,7 +298,7 @@ func InitOsinServer() {
 	})
 
 	// Application destination - ASSERTION
-	http.HandleFunc("/appauth/assertion", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/appauth/assertion", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 
 		w.Write([]byte("<html><body>"))
@@ -336,7 +343,7 @@ func InitOsinServer() {
 	})
 
 	// Application destination - REFRESH
-	http.HandleFunc("/appauth/refresh", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/appauth/refresh", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 
 		w.Write([]byte("<html><body>"))
@@ -387,7 +394,7 @@ func InitOsinServer() {
 	})
 
 	// Application destination - INFO
-	http.HandleFunc("/appauth/info", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/appauth/info", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 
 		w.Write([]byte("<html><body>"))
@@ -431,4 +438,9 @@ func InitOsinServer() {
 			w.Write([]byte(fmt.Sprintf("<a href=\"%s\">Refresh Token</a><br/>", rurl)))
 		}
 	})
+	//srv := &http.Server{
+	//	Addr:    ":8080",
+	//	Handler: mux,
+	//}
+	return mux
 }

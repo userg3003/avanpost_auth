@@ -227,7 +227,10 @@ func health(c *gin.Context) {
 }
 
 func SetupRouter(swagger bool) *gin.Engine {
-	r := gin.Default()
+	//r := gin.Default()
+	r := gin.New()
+	r.Use(gin.Logger())
+	r.Use(gin.Recovery())
 	store := cookie.NewStore([]byte(viper.GetString("SERVICE_COOKIE_SESSION_SECRET")))
 	r.Use(sessions.Sessions(viper.GetString("SERVICE_COOKIE_SESSION_NAME"), store))
 
