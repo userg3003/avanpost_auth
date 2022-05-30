@@ -22,19 +22,19 @@ func TestEndpointsTestSuite(t *testing.T) {
 }
 
 func (suite *EndpointsTestSuite) TestHealthRoute() {
-	assert := assert.New(suite.T())
+	assert_ := assert.New(suite.T())
 	router := avanpost_auth.SetupRouter(false)
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/health", nil)
 	router.ServeHTTP(w, req)
 
-	assert.Equal(204, w.Code)
-	assert.Equal("", w.Body.String())
+	assert_.Equal(204, w.Code)
+	assert_.Equal("", w.Body.String())
 }
 
 func (suite *EndpointsTestSuite) TestAuthRedirect() {
-	assert := assert.New(suite.T())
+	assert_ := assert.New(suite.T())
 	helpers.InitConfigForTests("app_test.env")
 	router := avanpost_auth.SetupRouter(false)
 
@@ -42,23 +42,8 @@ func (suite *EndpointsTestSuite) TestAuthRedirect() {
 	req, _ := http.NewRequest("GET", "/auth", nil)
 	router.ServeHTTP(w, req)
 
-	assert.Equal(302, w.Code)
+	assert_.Equal(302, w.Code)
 	expected := fmt.Sprintf("<a href=\"%s\">Found</a>.\n\n", utils.FullUrlForAuthorize("xyz"))
 	expected = strings.ReplaceAll(expected, "&", "&amp;")
-	assert.Equal(expected, w.Body.String())
-}
-
-func (suite *EndpointsTestSuite) TestBadAuthRedirect() {
-	assert := assert.New(suite.T())
-	helpers.InitConfigForTests("app_test_bad_config.env")
-	router := avanpost_auth.SetupRouter(false)
-
-	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/auth", nil)
-	router.ServeHTTP(w, req)
-
-	assert.Equal(302, w.Code)
-	expected := fmt.Sprintf("<a href=\"%s\">Found</a>.\n\n", utils.FullUrlForAuthorize("xyz"))
-	expected = strings.ReplaceAll(expected, "&", "&amp;")
-	assert.Equal(expected, w.Body.String())
+	assert_.Equal(expected, w.Body.String())
 }
