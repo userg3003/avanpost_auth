@@ -93,7 +93,6 @@ func (suite *BadConfigTestSuite) TestBadOAut2ClientSecret() {
 }
 
 // Проверить несовпадение  пути редиректа авторизации сервиса   и  OAuth2-сервера
-// При несовпадении OAuth2-сервер пренаправляет на страницу ввода логина и пароля.
 func (suite *BadConfigTestSuite) TestBadServiceOAuth2Redirect() {
 	assert_ := assert.New(suite.T())
 	configName := "app_test.env"
