@@ -89,3 +89,29 @@ func InitPlaywright(assert *assert.Assertions) (*playwright.Playwright, error, p
 	assert.Nil(err, fmt.Sprintf("could not create page: %v", err))
 	return pw, err, browser, page
 }
+
+type ErrAuthorize struct {
+	Error            string `json:"error"`
+	ErrorDescription string `json:"error_description"`
+	State            string `json:"state"`
+}
+
+type ConfigJson struct {
+	LogLevel                    string `json:"log_level"`
+	Oauth2ClientID              string `json:"oauth2_client_id"`
+	Oauth2ClientSecret          string `json:"oauth2_client_secret"`
+	Oauth2URLAuthHost           string `json:"oauth2_url_auth_host"`
+	Oauth2URLAuthPath           string `json:"oauth2_url_auth_path"`
+	Oauth2URLAuthPort           string `json:"oauth2_url_auth_port"`
+	Oauth2URLAuthShema          string `json:"oauth2_url_auth_shema"`
+	Oauth2URLInfoPath           string `json:"oauth2_url_info_path"`
+	Oauth2URLTokenPath          string `json:"oauth2_url_token_path"`
+	ServiceCookieSessionName    string `json:"service_cookie_session_name"`
+	ServiceCookieSessionSecret  string `json:"service_cookie_session_secret"`
+	ServiceHost                 string `json:"service_host"`
+	ServiceOauth2Redirect       string `json:"service_oauth2_redirect"`
+	ServicePort                 string `json:"service_port"`
+	ServiceRedirectURLAfterAuth string `json:"service_redirect_url_after_auth"`
+	ServiceShema                string `json:"service_shema"`
+	Swagger                     string `json:"swagger"`
+}
