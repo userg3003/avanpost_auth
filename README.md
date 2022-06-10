@@ -23,6 +23,7 @@
 **OAUTH2_URL_INFO_PATH** - путь в Avanpost FAM для запроса данных авторизации по токену  
 **OAUTH2_CLIENT_ID** -   id клиента  в Avanpost FAM  
 **OAUTH2_CLIENT_SECRET**   -   секрет клиента  в Avanpost FAM     
+**OAUTH2_SCOPES**   -   scoupes запрашиваемые  из Avanpost FAM (по умолчанию: openid email profile permissions)  
 **SWAGGER** -   включить/отключить swagger (true/false)  
 **LOG_LEVEL** - уроввень логирования  
 
