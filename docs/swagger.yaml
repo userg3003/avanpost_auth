@@ -1,5 +1,5 @@
 basePath: /
-host: localhost:3011
+host: 10.0.0.26:3011
 info:
   contact:
     email: s.urvanov@gmail.com
@@ -14,7 +14,7 @@ paths:
       consumes:
       - application/json
       description: |-
-        По этому пути "прилитает" ответ от сервера Avanpost_FSM с данными авторизации.
+        По этому пути "прилитает" ответ от сервера Avanpost_FAM с данными авторизации.
         Результат авторизации возвращается в сессионной cookie.
       produces:
       - text/html
@@ -23,7 +23,7 @@ paths:
           description: OK
           schema:
             type: string
-      summary: Авторизация на сервере Avanpost_FSM.
+      summary: Авторизация на сервере Avanpost_FAM.
       tags:
       - Internal
   /auth:
@@ -42,7 +42,7 @@ paths:
           description: OK
           schema:
             type: string
-      summary: Авторизация на сервере Avanpost_FSM
+      summary: Авторизация на сервере Avanpost_FAM
       tags:
       - Auth
   /config:
@@ -97,7 +97,7 @@ paths:
       consumes:
       - application/json
       description: |-
-        Получить данные сервера Avanpost_FSM по токену.
+        Получить данные сервера Avanpost_FAM по токену.
         Токен передаётся в сессионной cookie.
         Результат возвращается в ... (см. ReadMe).
       produces:
@@ -107,13 +107,7 @@ paths:
           description: OK
           schema:
             type: string
-      summary: Получение авторизацонных данных от сервера Avanpost_FSM
+      summary: Получение авторизацонных данных от сервера Avanpost_FAM
       tags:
       - Auth
 swagger: "2.0"
-tags:
-- description: Cool Description
-  externalDocs:
-    description: Best example documentation
-    url: https://example.com
-  name: This is the name of the tag

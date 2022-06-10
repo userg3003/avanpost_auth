@@ -43,7 +43,7 @@ func (suite *EndpointsTestSuite) TestAuthRedirect() {
 	router.ServeHTTP(w, req)
 
 	assert_.Equal(302, w.Code)
-	expected := fmt.Sprintf("<a href=\"%s\">Found</a>.\n\n", utils.FullUrlForAuthorize("xyz"))
+	expected := fmt.Sprintf("<a href=\"%s\">Found</a>.\n\n", utils.FullUrlForAuthorize("xyz", "profile"))
 	expected = strings.ReplaceAll(expected, "&", "&amp;")
 	assert_.Equal(expected, w.Body.String())
 }

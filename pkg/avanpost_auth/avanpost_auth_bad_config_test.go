@@ -2,6 +2,7 @@ package avanpost_auth_test
 
 import (
 	"avanpost_auth/internal/helpers"
+	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/rs/zerolog/log"
@@ -19,6 +20,7 @@ type BadConfigTestSuite struct {
 }
 
 func TestBadConfigTestSuite(t *testing.T) {
+	helpers.InitConfigForTests("app_test.env")
 	suite.Run(t, new(BadConfigTestSuite))
 }
 
@@ -29,9 +31,12 @@ func (suite *BadConfigTestSuite) TestBadOAut2AuthorizePath() {
 	//}
 	assert_ := assert.New(suite.T())
 	configName := "app_test.env"
-	os.Setenv("OAUTH2_URL_AUTH_PATH", viper.GetString("SERVICE_PORT")+"123")
-	srv, osinSrv, ctx := helpers.StartServers(configName)
-	defer helpers.ShutdownServers(ctx, srv, osinSrv)
+	configParam := os.Getenv("OAUTH2_URL_AUTH_PATH")
+	tmpConfig, srv, osinSrv, ctx := startServers(configParam, configName)
+	defer func() {
+		os.Setenv(configParam, tmpConfig)
+		helpers.ShutdownServers(ctx, srv, osinSrv)
+	}()
 
 	resp, err := http.Get(fmt.Sprintf("http://localhost:%d/auth", viper.GetInt("SERVICE_PORT")))
 	assert_.Nil(err, "Error authorize")
@@ -50,9 +55,12 @@ func (suite *BadConfigTestSuite) TestBadOAut2AuthorizePath() {
 func (suite *BadConfigTestSuite) TestBadOAut2ClientId() {
 	assert_ := assert.New(suite.T())
 	configName := "app_test.env"
-	os.Setenv("OAUTH2_CLIENT_ID", viper.GetString("OAUTH2_CLIENT_ID")+"123")
-	srv, osinSrv, ctx := helpers.StartServers(configName)
-	defer helpers.ShutdownServers(ctx, srv, osinSrv)
+	configParam := "OAUTH2_URL_AUTH_PATH"
+	tmpConfig, srv, osinSrv, ctx := startServers(configParam, configName)
+	defer func() {
+		os.Setenv(configParam, tmpConfig)
+		helpers.ShutdownServers(ctx, srv, osinSrv)
+	}()
 
 	resp, err := http.Get(fmt.Sprintf("http://localhost:%d/auth", viper.GetInt("SERVICE_PORT")))
 	assert_.Nil(err, "Error authorize")
@@ -70,14 +78,25 @@ func (suite *BadConfigTestSuite) TestBadOAut2ClientId() {
 	assert_.Equal(errAuthorize.Error, "unauthorized_client")
 }
 
+func startServers(configParam string, configName string) (string, *http.Server, *http.Server, context.Context) {
+	tmpConfig := os.Getenv(configParam)
+	os.Setenv(configParam, os.Getenv(configParam)+"123")
+	srv, osinSrv, ctx := helpers.StartServers(configName)
+	return tmpConfig, srv, osinSrv, ctx
+}
+
 // Проверить несовпадение  секрета сервиса и  OAuth2-сервера
 // При несовпадении OAuth2-сервер пренаправляет на страницу ввода логина и пароля.
 func (suite *BadConfigTestSuite) TestBadOAut2ClientSecret() {
 	assert_ := assert.New(suite.T())
 	configName := "app_test.env"
-	os.Setenv("OAUTH2_CLIENT_SECRET", viper.GetString("OAUTH2_CLIENT_SECRET")+"123")
+	os.Setenv("OAUTH2_CLIENT_SECRET", "123")
 	srv, osinSrv, ctx := helpers.StartServers(configName)
-	defer helpers.ShutdownServers(ctx, srv, osinSrv)
+
+	defer func() {
+		helpers.InitConfigForTests(configName)
+		helpers.ShutdownServers(ctx, srv, osinSrv)
+	}()
 
 	resp, err := http.Get(fmt.Sprintf("http://localhost:%d/auth", viper.GetInt("SERVICE_PORT")))
 	assert_.Nil(err, "Error authorize")
@@ -96,9 +115,12 @@ func (suite *BadConfigTestSuite) TestBadOAut2ClientSecret() {
 func (suite *BadConfigTestSuite) TestBadServiceOAuth2Redirect() {
 	assert_ := assert.New(suite.T())
 	configName := "app_test.env"
-	os.Setenv("SERVICE_OAUTH2_REDIRECT", viper.GetString("SERVICE_OAUTH2_REDIRECT")+"123")
+	os.Setenv("SERVICE_OAUTH2_REDIRECT", "badredirect")
 	srv, osinSrv, ctx := helpers.StartServers(configName)
-	defer helpers.ShutdownServers(ctx, srv, osinSrv)
+	defer func() {
+		helpers.InitConfigForTests(configName)
+		helpers.ShutdownServers(ctx, srv, osinSrv)
+	}()
 
 	resp, err := http.Get(fmt.Sprintf("http://localhost:%d/auth", viper.GetInt("SERVICE_PORT")))
 	assert_.Nil(err, "Error authorize")

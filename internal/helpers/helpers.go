@@ -44,13 +44,12 @@ func StartService(configName string) *http.Server {
 		}
 
 	}()
-
 	return srv
 
 }
 
 func StartServers(configName string) (*http.Server, *http.Server, context.Context) {
-	var srv *http.Server = StartService(configName)
+	srv := StartService(configName)
 	osinSrv := StartOauth2Server()
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()

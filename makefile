@@ -40,7 +40,7 @@ test-cover-count:
 	go tool cover -html cover.out
 
 tests:
-	go test ./pkg/avanpost_auth -v
+	go test ./pkg/avanpost_auth
 
 
 

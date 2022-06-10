@@ -22,7 +22,7 @@ const docTemplate = `{
     "paths": {
         "/appauth": {
             "get": {
-                "description": "По этому пути \"прилитает\" ответ от сервера Avanpost_FSM с данными авторизации.\nРезультат авторизации возвращается в сессионной cookie.",
+                "description": "По этому пути \"прилитает\" ответ от сервера Avanpost_FAM с данными авторизации.\nРезультат авторизации возвращается в сессионной cookie.",
                 "consumes": [
                     "application/json"
                 ],
@@ -32,7 +32,7 @@ const docTemplate = `{
                 "tags": [
                     "Internal"
                 ],
-                "summary": "Авторизация на сервере Avanpost_FSM.",
+                "summary": "Авторизация на сервере Avanpost_FAM.",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -55,7 +55,7 @@ const docTemplate = `{
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Авторизация на сервере Avanpost_FSM",
+                "summary": "Авторизация на сервере Avanpost_FAM",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -137,7 +137,7 @@ const docTemplate = `{
         },
         "/info": {
             "get": {
-                "description": "Получить данные сервера Avanpost_FSM по токену.\nТокен передаётся в сессионной cookie.\nРезультат возвращается в ... (см. ReadMe).",
+                "description": "Получить данные сервера Avanpost_FAM по токену.\nТокен передаётся в сессионной cookie.\nРезультат возвращается в ... (см. ReadMe).",
                 "consumes": [
                     "application/json"
                 ],
@@ -147,7 +147,7 @@ const docTemplate = `{
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Получение авторизацонных данных от сервера Avanpost_FSM",
+                "summary": "Получение авторизацонных данных от сервера Avanpost_FAM",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -158,23 +158,13 @@ const docTemplate = `{
                 }
             }
         }
-    },
-    "tags": [
-        {
-            "description": "Cool Description",
-            "name": "This is the name of the tag",
-            "externalDocs": {
-                "description": "Best example documentation",
-                "url": "https://example.com"
-            }
-        }
-    ]
+    }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:3011",
+	Host:             "10.0.0.26:3011",
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "Avanpost auth Swagger API",
